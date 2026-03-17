@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Finger Detection Camera</title>
+</head>
+
+<body>
+
+<h2>Finger Detection Camera</h2>
+
+<video id="video" width="400" autoplay></video>
+<br><br>
+
+<button onclick="capture()">Detect Finger</button>
+
+<h3 id="result"></h3>
+
+<script>
+
+const video = document.getElementById("video")
+
+navigator.mediaDevices.getUserMedia({video:true})
+.then(stream=>{
+    video.srcObject = stream
+})
+
+function capture(){
+
+    const canvas = document.createElement("canvas")
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+
+    const ctx = canvas.getContext("2d")
+    ctx.drawImage(video,0,0)
+
+    const image = canvas.toDataURL("image/png")
+
+    fetch("/predict",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({image:image})
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        document.getElementById("result").innerText =
+        "Jumlah jari: " + data.prediction
+    })
+
+}
+
+</script>
+
+</body>
+</html>
