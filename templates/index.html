@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Touchless App Launcher 👋</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h1>Touchless App Launcher 👋</h1>
+
+<p><b>Gesture:</b></p>
+<p>
+1 → Salam + Waktu <br>
+2 → ChatGPT <br>
+3 → YouTube <br>
+4 → Instagram
+</p>
+
+<video id="video" autoplay></video>
+
+<br>
+
+<button onclick="capture()">Detect Sekali</button>
+<button onclick="startAuto()">Auto Detect</button>
+<button onclick="stopAuto()">Stop</button>
+
+<h2 id="result">Menunggu deteksi...</h2>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
