@@ -7,9 +7,26 @@ import io
 import cv2
 import mediapipe as mp
 
+from tensorflow.keras.layers import InputLayer
+from tensorflow.keras.utils import get_custom_objects
+from tensorflow.keras import mixed_precision
+
+original_init = InputLayer.__init__
+
+def custom_inputlayer_init(self, *args, **kwargs):
+    if 'batch_shape' in kwargs:
+        kwargs['batch_input_shape'] = kwargs.pop('batch_shape')
+    original_init(self, *args, **kwargs)
+
+InputLayer.__init__ = custom_inputlayer_init
+
+get_custom_objects().update({
+    "DTypePolicy": mixed_precision.Policy
+})
+
 app = Flask(__name__)
 
-model = tf.keras.models.load_model("finger_count_model.h5")
+model = tf.keras.models.load_model("finger_count_model.h5", compile=False)
 classes = ['0','1','2','3','4','5']
 
 mp_hands = mp.solutions.hands
@@ -59,7 +76,7 @@ def predict():
                 xmin, xmax = min(x_list), max(x_list)
                 ymin, ymax = min(y_list), max(y_list)
 
-                margin = 20
+                margin = 40
                 xmin = max(0, xmin - margin)
                 ymin = max(0, ymin - margin)
                 xmax = min(w, xmax + margin)
