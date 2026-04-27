@@ -42,6 +42,9 @@ project/
 ```
 
 ## Cara Install
+
+Project ini berhasil berjalan dengan versi Python 3.10+
+
 ```bash
 pip install -r requirements.txt
 ```
